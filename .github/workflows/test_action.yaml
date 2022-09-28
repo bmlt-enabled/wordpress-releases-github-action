@@ -48,12 +48,12 @@ jobs:
           file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
           aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
           s3_key: ${{ env.S3_KEY }}
-#
-#      - name: Print account
-#        run: echo "${{ steps.publish_latest.outputs.account }}"
-#
-#      - name: Print the release name
-#        run: echo "${{ steps.publish_latest.outputs.release_id }}"
+
+      - name: Print Status Code
+        run: echo "${{ steps.publish_latest.outputs.status_code }}"
+
+      - name: Print the release PUT data
+        run: echo "${{ steps.publish_latest.outputs.put_data }}"
 #
 #      - name: Print file sha
 #        run: echo "${{ steps.publish_latest.outputs.file_sha }}"
