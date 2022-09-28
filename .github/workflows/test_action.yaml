@@ -29,17 +29,6 @@ jobs:
           echo $DIST_DIR_S3/$ZIP_FILENAME
           echo "::set-output name=release_file::$DIST_DIR_S3/$ZIP_FILENAME"
 
-
-  test-publish:
-    runs-on: ubuntu-22.04
-    name: Test Publish
-    needs: deploy-test
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Publish Release to Latest WP
         id: publish_latest
         uses: ./
