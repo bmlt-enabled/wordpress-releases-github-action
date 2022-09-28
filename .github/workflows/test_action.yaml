@@ -35,6 +35,7 @@ jobs:
           id: crouton
           file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
           aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          s3_key: ${{ env.S3_KEY }}
 
       - name: Print account
         run: echo "${{ steps.publish_latest.outputs.account }}"

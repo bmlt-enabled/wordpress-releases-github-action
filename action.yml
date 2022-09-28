@@ -13,6 +13,14 @@ inputs:
     description: 'AWS Account ID'
     required: true
     default: ''
+  s3_key:
+    description: 'The S3_KEY'
+    required: true
+    default: ''
+  deployment_type:
+    description: 'The Deployment Type'
+    required: false
+    default: 'wordpress'
 outputs:
   release_id:
     description: 'Release id'
@@ -20,9 +28,6 @@ outputs:
   file_sha:
     description: 'File sha256'
     value: ${{ steps.publish-release.outputs.file_sha }}
-  account:
-    description: 'account aws'
-    value: ${{ steps.publish-release.outputs.account }}
 runs:
   using: 'composite'
   steps:
@@ -39,6 +44,8 @@ runs:
       run: |
         echo "INPUT_ID=${{ inputs.id }}" >> $GITHUB_ENV
         echo "INPUT_FILE=${{ inputs.file }}" >> $GITHUB_ENV
+        echo "INPUT_S3_KEY=${{ inputs.s3_key }}" >> $GITHUB_ENV
+        echo "INPUT_DEPLOYMENT_TYPE=${{ inputs.deployment_type }}" >> $GITHUB_ENV
       shell: bash
 
     - name: configure aws credentials
