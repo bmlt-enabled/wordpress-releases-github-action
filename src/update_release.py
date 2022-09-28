@@ -19,7 +19,7 @@ def get_hash(file):
 
 file = os.environ.get("INPUT_FILE")
 s3_key = os.environ.get("INPUT_S3_KEY")
-deployment_type = os.environ.get("INPUT_DEPLOYMENNT_TYPE")
+deployment_type = os.environ.get("INPUT_DEPLOYMENNT_TYPE") if os.environ.get("INPUT_DEPLOYMENNT_TYPE") else "wordpress"
 file_sha = get_hash(file)
 file_name = file.rsplit('/', 1)[-1]
 url = f"https://release-api.aws.bmlt.app/releases/{s3_key}"
