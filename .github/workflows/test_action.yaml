@@ -32,10 +32,10 @@ jobs:
         id: publish_latest
         uses: ./
         with:
-          id: crouton
+          id: temporary-closures-bmlt
           file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
           aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          s3_key: ${{ env.S3_KEY }}
+          s3_key: temporary-closures-bmlt
 
       - name: Print account
         run: echo "${{ steps.publish_latest.outputs.account }}"
