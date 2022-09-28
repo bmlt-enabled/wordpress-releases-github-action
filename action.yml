@@ -35,6 +35,7 @@ runs:
         echo ${{ inputs.file }}
         echo $GITHUB_WORKSPACE
         ls $GITHUB_WORKSPACE
+        ls ../
       shell: bash
 
     - name: Publish the release
