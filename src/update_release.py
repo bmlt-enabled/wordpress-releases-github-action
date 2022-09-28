@@ -1,6 +1,9 @@
 import os
 import hashlib
+import requests
 import boto3
+from botocore.auth import SigV4Auth
+from botocore.awsrequest import AWSRequest
 
 account = boto3.client('sts').get_caller_identity().get('Account')
 
