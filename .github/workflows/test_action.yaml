@@ -28,20 +28,48 @@ jobs:
           mkdir -p $DIST_DIR_S3 && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_S3/$ZIP_FILENAME
           mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
 
-      - name: Publish Release to Latest WP
-        id: publish_latest
-        uses: ./
+      - name: Install Python
+        uses: actions/setup-python@v4
         with:
-          id: temporary-closures-bmlt
-          file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
-          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          s3_key: temporary-closures-bmlt
+          python-version: '3.10'
 
-      - name: Print account
-        run: echo "${{ steps.publish_latest.outputs.account }}"
+      - name: Install Dependencies
+        run: pip install -r $GITHUB_ACTION_PATH/requirements.txt
+        shell: bash
 
-      - name: Print the release name
-        run: echo "${{ steps.publish_latest.outputs.release_id }}"
+      - name: Pass Inputs to Shell
+        run: |
+          echo "INPUT_ID=temporary-closures-bmlt" >> $GITHUB_ENV
+          echo "INPUT_FILE=${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}" >> $GITHUB_ENV
+          echo "INPUT_S3_KEY=temporary-closures-bmlt" >> $GITHUB_ENV
+          echo "INPUT_DEPLOYMENT_TYPE=wordpress" >> $GITHUB_ENV
+        shell: bash
 
-      - name: Print file sha
-        run: echo "${{ steps.publish_latest.outputs.file_sha }}"
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/github-actions/gh-ci-s3-artifact
+          role-session-name: gh-actions-bmlt-release
+          aws-region: us-east-1
+
+      - name: Publish the release
+        id: publish-release
+        run: src/update_release.py
+        shell: bash
+#      - name: Publish Release to Latest WP
+#        id: publish_latest
+#        uses: ./
+#        with:
+#          id: temporary-closures-bmlt
+#          file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
+#          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+#          s3_key: temporary-closures-bmlt
+#
+#      - name: Print account
+#        run: echo "${{ steps.publish_latest.outputs.account }}"
+#
+#      - name: Print the release name
+#        run: echo "${{ steps.publish_latest.outputs.release_id }}"
+#
+#      - name: Print file sha
+#        run: echo "${{ steps.publish_latest.outputs.file_sha }}"

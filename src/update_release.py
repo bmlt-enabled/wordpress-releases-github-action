@@ -38,7 +38,7 @@ data = {
     "sha256": file_sha,
     "deploymentType": "wordpress"
 }
-
+print(data)
 headers = {'Content-Type': 'application/x-amz-json-1.1'}
 request = AWSRequest(method='PUT', url=url, data=json.dumps(data), headers=headers)
 SigV4Auth(creds, "execute-api", 'us-east-1').add_auth(request)
