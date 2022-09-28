@@ -1,0 +1,32 @@
+name: 'BMLT WordPress Release'
+description: 'GitHub action to publish latest wordpress release'
+inputs:
+  id:
+    description: 'Release name'
+    required: true
+    default: ""
+outputs:
+  release_id:
+    description: 'Release id'
+    value: ${{ steps.publish-release.outputs.set_id }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: pip install -r requirements.txt
+      shell: bash
+
+    - name: Pass Inputs to Shell
+      run: |
+        echo "INPUT_ID=${{ inputs.id }}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Publish the release
+      id: publish-release
+      run: python src/update_release.py
+      shell: bash
