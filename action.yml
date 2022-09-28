@@ -5,10 +5,17 @@ inputs:
     description: 'Release name'
     required: true
     default: ""
+  file:
+    description: 'File path'
+    required: true
+    default: ""
 outputs:
   release_id:
     description: 'Release id'
     value: ${{ steps.publish-release.outputs.set_id }}
+  file_sha:
+    description: 'File sha256'
+    value: ${{ steps.publish-release.outputs.file_sha }}
 runs:
   using: 'composite'
   steps:
@@ -24,6 +31,7 @@ runs:
     - name: Pass Inputs to Shell
       run: |
         echo "INPUT_ID=${{ inputs.id }}" >> $GITHUB_ENV
+        echo "INPUT_FILE=${{ inputs.file }}" >> $GITHUB_ENV
       shell: bash
 
     - name: Publish the release
