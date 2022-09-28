@@ -54,7 +54,7 @@ jobs:
 
       - name: Publish the release
         id: publish-release
-        run: src/update_release.py
+        run: python src/update_release.py
         shell: bash
 #      - name: Publish Release to Latest WP
 #        id: publish_latest
