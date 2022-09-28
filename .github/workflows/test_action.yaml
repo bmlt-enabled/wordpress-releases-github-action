@@ -16,6 +16,7 @@ jobs:
         id: code-checkout
 
       - name: Prepare zip file
+        id: prepare_zip
         run: |
           export ZIP_FILENAME=${S3_KEY}-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
           echo "ZIP_FILENAME=${ZIP_FILENAME}" >> $GITHUB_ENV
@@ -23,6 +24,9 @@ jobs:
           mkdir $BUILD_DIR && mv $ZIP_FILENAME $BUILD_DIR/
           mkdir -p $DIST_DIR_S3 && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_S3/$ZIP_FILENAME
           mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
+          echo $DIST_DIR_S3/$ZIP_FILENAME
+      outputs:
+        fileName: $DIST_DIR_S3/$ZIP_FILENAME
 
   test-publish:
     runs-on: ubuntu-22.04
@@ -37,7 +41,7 @@ jobs:
         uses: ./
         with:
           id: crouton
-          file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
+          file: ${{ deploy-test.prepare_zip.outputs.fileName }}
 
       - name: Print the release name
         run: echo "${{ steps.publish_latest.outputs.release_id }}"
