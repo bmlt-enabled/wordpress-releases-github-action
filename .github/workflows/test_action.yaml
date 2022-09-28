@@ -12,8 +12,8 @@ jobs:
       BUILD_DIR: build
       DIST_DIR_S3: dist/s3
       DIST_DIR_GITHUB: dist/github
-      GITHUB_RELEASE_FILENAME: bmltc-test-plugin.zip
-      S3_KEY: bmltc-test-plugin
+      GITHUB_RELEASE_FILENAME: hello-dolly.zip
+      S3_KEY: hello-dolly
     steps:
       - uses: actions/checkout@v3
         id: code-checkout
@@ -23,10 +23,40 @@ jobs:
         run: |
           export ZIP_FILENAME=${S3_KEY}-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
           echo "ZIP_FILENAME=${ZIP_FILENAME}" >> $GITHUB_ENV
-          zip -r $ZIP_FILENAME ./ -x "*.git*"
+          zip -r $ZIP_FILENAME ./ -x "*.git*" -x "src"
           mkdir $BUILD_DIR && mv $ZIP_FILENAME $BUILD_DIR/
           mkdir -p $DIST_DIR_S3 && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_S3/$ZIP_FILENAME
           mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-s3-artifact
+          role-session-name: gh-actions-bmlt-release
+          aws-region: us-east-1
+
+
+      - name: copy artifacts to s3
+        run: |
+          aws s3 cp ${DIST_DIR_S3}/${ZIP_FILENAME} s3://${{ secrets.S3_BUCKET }}/${S3_KEY}/${ZIP_FILENAME}
+
+#      - name: Publish Release to Latest WP
+#        id: publish_latest
+#        uses: ./
+#        with:
+#          id: ${{ env.S3_KEY }}
+#          file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
+#          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+#          s3_key: ${{ env.S3_KEY }}
+#
+#      - name: Print account
+#        run: echo "${{ steps.publish_latest.outputs.account }}"
+#
+#      - name: Print the release name
+#        run: echo "${{ steps.publish_latest.outputs.release_id }}"
+#
+#      - name: Print file sha
+#        run: echo "${{ steps.publish_latest.outputs.file_sha }}"
 
 #      - name: Install Python
 #        uses: actions/setup-python@v4
@@ -56,21 +86,3 @@ jobs:
 #        id: publish-release
 #        run: python src/update_release.py
 #        shell: bash
-
-      - name: Publish Release to Latest WP
-        id: publish_latest
-        uses: ./
-        with:
-          id: temporary-closures-bmlt
-          file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
-          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          s3_key: temporary-closures-bmlt
-
-      - name: Print account
-        run: echo "${{ steps.publish_latest.outputs.account }}"
-
-      - name: Print the release name
-        run: echo "${{ steps.publish_latest.outputs.release_id }}"
-
-      - name: Print file sha
-        run: echo "${{ steps.publish_latest.outputs.file_sha }}"
