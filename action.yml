@@ -16,6 +16,9 @@ outputs:
   file_sha:
     description: 'File sha256'
     value: ${{ steps.publish-release.outputs.file_sha }}
+  account:
+    description: 'account aws'
+    value: ${{ steps.publish-release.outputs.account }}
 runs:
   using: 'composite'
   steps:

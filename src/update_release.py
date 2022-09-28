@@ -1,5 +1,8 @@
 import os
 import hashlib
+import boto3
+
+account = boto3.client('sts').get_caller_identity().get('Account')
 
 
 def get_hash(file):
@@ -23,3 +26,4 @@ else:
 
 print(f"::set-output name=set_id::{name}")
 print(f"::set-output name=file_sha::{file_sha}")
+print(f"::set-output name=account::{account}")
