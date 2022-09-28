@@ -4,6 +4,7 @@ on: [push]
 jobs:
   deploy-test:
     runs-on: ubuntu-22.04
+    name: Deploy Test
     env:
       BUILD_DIR: build
       DIST_DIR_S3: dist/s3
