@@ -25,7 +25,7 @@ file = os.environ.get("INPUT_FILE")
 s3_key = os.environ.get("INPUT_S3_KEY")
 deployment_type = os.environ.get("INPUT_DEPLOYMENNT_TYPE")
 file_sha = get_hash(file)
-file_name = file.rsplit('/', 1)
+file_name = file.rsplit('/', 1)[0]
 url = f"https://release-api.aws.bmlt.app/releases/{s3_key}"
 
 session = boto3.Session()
