@@ -34,7 +34,7 @@ jobs:
         uses: ./
         with:
           id: crouton
-          file: ${{ needs.deploy-test.outputs.fileName }}
+          file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
 
       - name: Print the release name
         run: echo "${{ steps.publish_latest.outputs.release_id }}"

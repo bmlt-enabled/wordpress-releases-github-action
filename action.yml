@@ -33,11 +33,7 @@ runs:
         echo "INPUT_ID=${{ inputs.id }}" >> $GITHUB_ENV
         echo "INPUT_FILE=${{ inputs.file }}" >> $GITHUB_ENV
         echo ${{ inputs.file }}
-        echo $GITHUB_WORKSPACE
-        ls $GITHUB_WORKSPACE
-        ls ../
-        env
-        ls $GITHUB_PATH
+        ls -lt
       shell: bash
 
     - name: Publish the release
