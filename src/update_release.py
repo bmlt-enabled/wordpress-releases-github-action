@@ -25,7 +25,7 @@ file = os.environ.get("INPUT_FILE")
 s3_key = os.environ.get("INPUT_S3_KEY")
 deployment_type = os.environ.get("INPUT_DEPLOYMENNT_TYPE")
 file_sha = get_hash(file)
-file_name = file.rsplit('/', 1)[0]
+file_name = file.rsplit('/', 1)[-1]
 url = f"https://release-api.aws.bmlt.app/releases/{s3_key}"
 
 session = boto3.Session()
@@ -43,8 +43,8 @@ headers = {'Content-Type': 'application/x-amz-json-1.1'}
 request = AWSRequest(method='PUT', url=url, data=json.dumps(data), headers=headers)
 SigV4Auth(creds, "execute-api", 'us-east-1').add_auth(request)
 response = requests.request(method='PUT', url=url, headers=dict(request.headers), data=json.dumps(data))
-# print(response.text)
-# print(response.status_code)
+print(response.text)
+print(response.status_code)
 
 print(f"::set-output name=set_id::{id}")
 print(f"::set-output name=file_sha::{file_sha}")
