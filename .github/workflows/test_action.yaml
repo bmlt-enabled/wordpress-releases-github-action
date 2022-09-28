@@ -23,7 +23,7 @@ jobs:
         run: |
           export ZIP_FILENAME=${S3_KEY}-build${GITHUB_RUN_NUMBER}-${GITHUB_SHA}.zip
           echo "ZIP_FILENAME=${ZIP_FILENAME}" >> $GITHUB_ENV
-          zip -r $ZIP_FILENAME ./ -x "*.git*" -x "src"
+          zip -r $ZIP_FILENAME ./ -x "*.git*" -x "src/*"
           mkdir $BUILD_DIR && mv $ZIP_FILENAME $BUILD_DIR/
           mkdir -p $DIST_DIR_S3 && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_S3/$ZIP_FILENAME
           mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
