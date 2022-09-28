@@ -37,7 +37,7 @@ jobs:
         uses: ./
         with:
           id: crouton
-          file: ${DIST_DIR_S3}/${ZIP_FILENAME}
+          file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
 
       - name: Print the release name
         run: echo "${{ steps.publish_latest.outputs.release_id }}"
