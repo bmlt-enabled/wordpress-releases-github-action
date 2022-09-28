@@ -10,6 +10,7 @@ jobs:
       DIST_DIR_S3: dist/s3
       DIST_DIR_GITHUB: dist/github
       GITHUB_RELEASE_FILENAME: bmlt-test-plugin.zip
+      S3_KEY: bmlt-test-plugin
     steps:
       - uses: actions/checkout@v3
         id: code-checkout
@@ -26,6 +27,7 @@ jobs:
   test-publish:
     runs-on: ubuntu-22.04
     name: Test Publish
+    needs: deploy-test
     steps:
       - name: Checkout
         uses: actions/checkout@v2
