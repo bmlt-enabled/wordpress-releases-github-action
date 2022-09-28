@@ -37,6 +37,7 @@ runs:
         ls $GITHUB_WORKSPACE
         ls ../
         env
+        ls $GITHUB_PATH
       shell: bash
 
     - name: Publish the release
