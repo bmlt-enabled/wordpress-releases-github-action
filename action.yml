@@ -44,7 +44,7 @@ runs:
         echo "INPUT_DEPLOYMENT_TYPE=${{ inputs.deployment_type }}" >> $GITHUB_ENV
 
     - name: configure aws credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v2
       with:
         role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/github-actions/gh-ci-s3-artifact
         role-session-name: gh-actions-bmlt-release
