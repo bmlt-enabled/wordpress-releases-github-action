@@ -16,6 +16,20 @@ def get_hash(file):
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
 
+def set_action_output(output_name, value) :
+    """Sets the GitHub Action output, with backwards compatibility for
+    self-hosted runners without a GITHUB_OUTPUT environment file.
+
+    Keyword arguments:
+    output_name - The name of the output
+    value - The value of the output
+    """
+    if "GITHUB_OUTPUT" in os.environ :
+        with open(os.environ["GITHUB_OUTPUT"], "a") as f :
+            print("{0}={1}".format(output_name, value), file=f)
+    else :
+        print("::set-output name={0}::{1}".format(output_name, value))
+
 
 file = os.environ.get("INPUT_FILE")
 s3_key = os.environ.get("INPUT_S3_KEY")
@@ -40,5 +54,5 @@ request = AWSRequest(method='PUT', url=url, data=json.dumps(data), headers=heade
 SigV4Auth(creds, "execute-api", 'us-east-1').add_auth(request)
 response = requests.request(method='PUT', url=url, headers=dict(request.headers), data=json.dumps(data))
 
-print(f"put_data={json.dumps(data)} >> $GITHUB_ENV")
-print(f"status_code={response.status_code} >> $GITHUB_ENV")
+set_action_output("put_data", json.dumps(data))
+set_action_output("status_code", response.status_code)
