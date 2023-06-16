@@ -40,5 +40,5 @@ request = AWSRequest(method='PUT', url=url, data=json.dumps(data), headers=heade
 SigV4Auth(creds, "execute-api", 'us-east-1').add_auth(request)
 response = requests.request(method='PUT', url=url, headers=dict(request.headers), data=json.dumps(data))
 
-print(f"::set-output name=put_data::{json.dumps(data)}")
-print(f"::set-output name=status_code::{response.status_code}")
+print(f"put_data={json.dumps(data)} >> $GITHUB_ENV")
+print(f"status_code={response.status_code} >> $GITHUB_ENV")
