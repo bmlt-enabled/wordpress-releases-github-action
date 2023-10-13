@@ -34,7 +34,7 @@ runs:
       run: pip install -r $GITHUB_ACTION_PATH/requirements.txt
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/github-actions/gh-ci-s3-artifact
         role-session-name: gh-actions-bmlt-release

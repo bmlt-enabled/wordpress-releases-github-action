@@ -6,9 +6,7 @@ import boto3
 from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
 
-CHUNK_SIZE = 4096
 DEFAULT_DEPLOYMENT_TYPE = "wordpress"
-CONTENT_TYPE = 'application/x-amz-json-1.1'
 REGION = 'us-east-1'
 
 
@@ -18,7 +16,7 @@ def get_hash(file):
     '''
     sha256_hash = hashlib.sha256()
     with open(file, "rb") as f:
-        for byte_block in iter(lambda: f.read(CHUNK_SIZE), b""):
+        for byte_block in iter(lambda: f.read(4096), b""):
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
 
@@ -62,7 +60,7 @@ def upload_to_s3(file, s3_key, deployment_type):
     }
     print(data)
 
-    headers = {'Content-Type': CONTENT_TYPE}
+    headers = {'Content-Type': 'application/x-amz-json-1.1'}
     request = AWSRequest(method='PUT', url=url, data=json.dumps(data), headers=headers)
     SigV4Auth(creds, "execute-api", REGION).add_auth(request)
     response = requests.request(method='PUT', url=url, headers=dict(request.headers), data=json.dumps(data))
