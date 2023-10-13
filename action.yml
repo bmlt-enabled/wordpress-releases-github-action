@@ -1,18 +1,15 @@
 name: 'BMLT WordPress Release'
-description: 'GitHub action to publish latest wordpress release'
+description: 'GitHub action to publish latest WordPress release'
 inputs:
   file:
     description: 'File path'
     required: true
-    default: ""
   s3_key:
     description: 'The S3_KEY'
     required: true
-    default: ''
   aws_account_id:
     description: 'AWS Account ID'
     required: true
-    default: ''
   deployment_type:
     description: 'The Deployment Type'
     required: false
@@ -27,30 +24,27 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Install Python
+    - name: Install Python 3.10
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
-    - name: Install Dependencies
+    - name: Install required Python packages
       shell: bash
       run: pip install -r $GITHUB_ACTION_PATH/requirements.txt
 
-    - name: Pass Inputs to Shell
-      shell: bash
-      run: |
-        echo "INPUT_FILE=${{ inputs.file }}" >> $GITHUB_ENV
-        echo "INPUT_S3_KEY=${{ inputs.s3_key }}" >> $GITHUB_ENV
-        echo "INPUT_DEPLOYMENT_TYPE=${{ inputs.deployment_type }}" >> $GITHUB_ENV
-
-    - name: configure aws credentials
-      uses: aws-actions/configure-aws-credentials@v2
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/github-actions/gh-ci-s3-artifact
         role-session-name: gh-actions-bmlt-release
         aws-region: us-east-1
 
-    - name: Publish the release
+    - name: Publish the WordPress release
       id: publish-release
       shell: bash
+      env:
+        INPUT_FILE: ${{ inputs.file }}
+        INPUT_S3_KEY: ${{ inputs.s3_key }}
+        INPUT_DEPLOYMENT_TYPE: ${{ inputs.deployment_type }}
       run: python $GITHUB_ACTION_PATH/src/update_release.py
