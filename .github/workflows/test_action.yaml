@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   deploy-test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     name: Deploy Test
     permissions:
       id-token: write
@@ -15,7 +15,7 @@ jobs:
       GITHUB_RELEASE_FILENAME: hello-dolly.zip
       S3_KEY: hello-dolly
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         id: code-checkout
 
       - name: Prepare zip file
@@ -29,7 +29,7 @@ jobs:
           mkdir -p $DIST_DIR_GITHUB && cp $BUILD_DIR/$ZIP_FILENAME $DIST_DIR_GITHUB/$GITHUB_RELEASE_FILENAME
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-s3-artifact
           role-session-name: gh-actions-bmlt-release
@@ -58,7 +58,7 @@ jobs:
 #        run: echo "${{ steps.publish_latest.outputs.file_sha }}"
 
 #      - name: Install Python
-#        uses: actions/setup-python@v4
+#        uses: actions/setup-python@v6
 #        with:
 #          python-version: '3.10'
 #
@@ -75,7 +75,7 @@ jobs:
 #        shell: bash
 #
 #      - name: configure aws credentials
-#        uses: aws-actions/configure-aws-credentials@v1
+#        uses: aws-actions/configure-aws-credentials@v5
 #        with:
 #          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions/gh-ci-s3-artifact
 #          role-session-name: gh-actions-bmlt-release

@@ -24,17 +24,17 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Install Python 3.10
-      uses: actions/setup-python@v4
+    - name: Install Python 3.13
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.10'
+        python-version: '3.13'
 
     - name: Install required Python packages
       shell: bash
       run: pip install -r $GITHUB_ACTION_PATH/requirements.txt
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@v5
       with:
         role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/github-actions/gh-ci-s3-artifact
         role-session-name: gh-actions-bmlt-release

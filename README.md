@@ -6,7 +6,7 @@ able to just create an additional step right after your `copy artifacts to s3` s
 ```yaml
       - name: Publish Release to Latest WP
         id: publish_latest
-        uses: bmlt-enabled/wordpress-releases-github-action@v1
+        uses: bmlt-enabled/wordpress-releases-github-action@v2
         with:
           file: ${{ env.DIST_DIR_S3 }}/${{ env.ZIP_FILENAME }}
           aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
